@@ -7,7 +7,7 @@ get_header();
 <div class = 'img'></div>
 <div class = 'center'>
 <div class = 'search-block'>
-<form role = 'search' method = 'get' action = '<?php echo get_permalink(91); ?>'>
+<form role = 'search' method = 'get' action = '<?php echo get_permalink(56);?>'>
 <!-- <form role = 'search' method = 'get' id = 'search-form'> -->
 <!-- <input type = 'hidden' name = 'path' id = 'path' value = 'http://localhost/wordpress/wp-content/themes/Teaching/search.php'> -->
 <select id = 'level-select' name="level-select" placeholder = 'select a Level...'>

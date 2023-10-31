@@ -711,8 +711,6 @@ function enqueue_custom_styles() {
 }
 add_action( 'wp_enqueue_scripts', 'enqueue_custom_styles' );
 
-
-
 add_action('wp_enqueue_scripts', 'enqueue_custom_js');
 function enqueue_custom_js() {
     wp_enqueue_script( 'script', get_template_directory_uri() . 'assets/js/script.js', array( 'jquery' ),'1.0', true);
