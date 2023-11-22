@@ -715,3 +715,17 @@ add_action('wp_enqueue_scripts', 'enqueue_custom_js');
 function enqueue_custom_js() {
     wp_enqueue_script( 'script', get_template_directory_uri() . 'assets/js/script.js', array( 'jquery' ),'1.0', true);
 }
+remove_role('subscriber');
+add_role('teacher', 'Teacher', array(
+    'read' => true,
+    'create_posts' => true,
+    'edit_posts' => true,
+    'edit_others_posts' => true,
+    'publish_posts' => true,
+    'manage_categories' => true,
+    ));
+add_role('student', 'Student', array(
+    'read' => true,
+    'create_posts' => true,
+    'edit_posts' => true,
+    ));
