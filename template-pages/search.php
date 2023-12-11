@@ -7,7 +7,7 @@ $selectedLanguage = $_GET['language-select'];
 $arguments = array(
     'post_type' => 'teacher',
     'meta_query' => array(
-        'relation' => 'AND',
+        'relation' => 'OR',
         array(
             'key' => 'country',
             'value' => $selectedCountry,

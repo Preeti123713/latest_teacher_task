@@ -711,10 +711,19 @@ function enqueue_custom_styles() {
 }
 add_action( 'wp_enqueue_scripts', 'enqueue_custom_styles' );
 
-add_action('wp_enqueue_scripts', 'enqueue_custom_js');
 function enqueue_custom_js() {
-    wp_enqueue_script( 'script', get_template_directory_uri() . 'assets/js/script.js', array( 'jquery' ),'1.0', true);
+    wp_enqueue_script( 'script', get_template_directory_uri() . '/assets/js/script.js', array( 'jquery' ),'1.0', true);
+    
+    $ajax_data = array(
+        'ajax_url' => admin_url('admin-ajax.php'),
+        'ajax_nonce' => wp_create_nonce('script-nonce'),
+    );
+    
+    // Localize the script with the passed data
+    wp_localize_script('script', 'ajax_object', $ajax_data); 
 }
+add_action('wp_enqueue_scripts', 'enqueue_custom_js');
+
 remove_role('subscriber');
 add_role('teacher', 'Teacher', array(
     'read' => true,
@@ -729,3 +738,50 @@ add_role('student', 'Student', array(
     'create_posts' => true,
     'edit_posts' => true,
     ));
+	
+	add_action('wp_ajax_nopriv_ajax_login', 'ajax_login');
+	add_action('wp_ajax_nopriv_register_user', 'register_user');
+
+	// Login Function
+function ajax_login() {
+    // check_ajax_referer('ajax-auth-nonce', 'security');
+    $email= $_POST['login_email'];
+    $password = $_POST['password'];
+
+    $user = wp_authenticate($email, $password);
+	print_r($user);
+
+    if (is_wp_error($user)) {
+        echo json_encode(array('loggedin' => false, 'message' => 'Invalid username or password.'));
+    } else {
+        wp_set_current_user($user->ID);
+        wp_set_auth_cookie($user->ID);
+        echo json_encode(array('loggedin' => true, 'message' => 'Login successful.'));
+    }
+    exit();
+}
+// Registration Function
+function register_user() {
+		        $email = sanitize_email($_POST['email']);
+		        $password = $_POST['password'];
+		        $first_name = $_POST['first_name'];
+		        $last_name = $_POST['last_name'];
+		
+		            $user_data = array(
+		                'user_login' => $email,
+		                'user_email' => $email,
+		                'user_pass' => $password,
+		                'first_name' => $first_name,
+		                'last_name' => $last_name,
+		                'role' => 'student', // Assign the role 'student' to the user
+		            );
+		
+		            $user_id = wp_insert_user($user_data);
+		            if (is_wp_error($user_id)) {
+		                echo $user_id->get_error_message();
+		            } else {
+		                echo "Registration successful";
+		            }
+
+    exit();
+}
